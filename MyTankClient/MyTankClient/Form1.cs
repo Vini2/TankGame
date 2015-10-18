@@ -24,23 +24,23 @@ namespace MyTankClient
         {
             if (e.KeyCode == Keys.Left)
             {
-                //client.sendToServer("LEFT#", this);
+                client.sendToServer("LEFT#", this);
             }
             else if (e.KeyCode == Keys.Right)
             {
-                //client.sendToServer("RIGHT#", this);
+                client.sendToServer("RIGHT#", this);
             }
             else if (e.KeyCode == Keys.Up)
             {
-                //client.sendToServer("UP#", this);
+                client.sendToServer("UP#", this);
             }
             else if (e.KeyCode == Keys.Down)
             {
-                //client.sendToServer("DOWN#", this);
+                client.sendToServer("DOWN#", this);
             }
             else if (e.KeyCode == Keys.A)
             {
-                //client.sendToServer("SHOOT#", this);
+                client.sendToServer("SHOOT#", this);
             }
         }
 
