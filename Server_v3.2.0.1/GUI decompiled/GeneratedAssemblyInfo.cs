@@ -1,0 +1,15 @@
+// Assembly GUI, Version 1.0.0.0
+
+[assembly: System.Runtime.CompilerServices.RuntimeCompatibility(WrapNonExceptionThrows=true)]
+[assembly: System.Reflection.AssemblyTitle("GUI")]
+[assembly: System.Reflection.AssemblyDescription("")]
+[assembly: System.Reflection.AssemblyFileVersion("1.0.0.0")]
+[assembly: System.Reflection.AssemblyCompany("")]
+[assembly: System.Reflection.AssemblyProduct("GUI")]
+[assembly: System.Reflection.AssemblyCopyright("Copyright \x00a9  2011")]
+[assembly: System.Runtime.InteropServices.Guid("72d91c75-bc4f-4c79-aad1-e4e46faa5d24")]
+[assembly: System.Reflection.AssemblyTrademark("")]
+[assembly: System.Reflection.AssemblyConfiguration("")]
+[assembly: Dotfuscator("000:0:4.0.2008.10000")]
+[assembly: System.Runtime.CompilerServices.CompilationRelaxations(8)]
+[assembly: System.Runtime.InteropServices.ComVisible(false)]
