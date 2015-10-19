@@ -26,6 +26,10 @@ namespace MyTankClient
 
         private Thread thread;
 
+        //to keep the player details
+        private int playerLocationX, playerLocationY;
+        private string playerName,direction;
+
         public MyClient() {
             thread = new Thread(new ThreadStart(recieveFromServer));
         }
@@ -66,6 +70,28 @@ namespace MyTankClient
                 {
                     data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
                 }
+
+                if (data.Substring(0,1).Equals("S"))
+                {
+                    decodeInitialPlayerLocations(data);
+                }
+                else if (data.Substring(0, 1).Equals("I"))
+                {
+                    decodeObstacleLocations(data);
+                }
+                else if (data.Substring(0, 1).Equals("C"))
+                {
+                    decodeCoinLocations(data);
+                }
+                else if (data.Substring(0, 1).Equals("G"))
+                {
+                    decodeCurrentState(data);
+                }
+                else if (data.Substring(0, 1).Equals("L"))
+                {
+                    decodeLifePacks(data);
+                }
+
                 string[] lines = Regex.Split(data, ":");
                     com.Invoke(new Action(() =>
                     {
@@ -84,6 +110,36 @@ namespace MyTankClient
                 listner.Stop();
                 clientRecieve.Close();
             }
+        }
+
+        private void decodeLifePacks(string data)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void decodeCurrentState(string data)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void decodeCoinLocations(string data)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void decodeObstacleLocations(string data)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void decodeInitialPlayerLocations(string data)
+        {
+            string[] lines = Regex.Split(data, ":");
+            string[] cordinates = Regex.Split(lines[2], ":");
+            playerName = lines[1];
+            playerLocationX = Int32.Parse(cordinates[0]);
+            playerLocationY = Int32.Parse(cordinates[1]);
+            direction = lines[3];
         }
 
     }
