@@ -13,11 +13,15 @@ namespace MyTankClient
     public partial class Form1 : Form
     {
         MyClient client;
-
+       
         public Form1()
         {
             InitializeComponent();
             client = new MyClient();
+            while (true)
+            {
+                LogText.Text = client.log;
+            }
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -78,6 +82,7 @@ namespace MyTankClient
         {
             client.sendToServer("LEFT#", this);
         }
+
 
         
     }

@@ -26,6 +26,7 @@ namespace MyTankClient
         private Form1 com;
 
         private Thread thread;
+        public string log { get; set; }
 
         //to keep the initial player details
         private int playerLocationX, playerLocationY;
@@ -36,19 +37,18 @@ namespace MyTankClient
 
         //details of each players and damage levels
         private string[] player1, player2, player3, player4, player5,p1damage,p2damage,p3damage,p4damage,p5damage;
-        
-        //coins and life pakc availability
-        private string[][] coins,lifepacks;
 
+        //To keep the list of coins and LifePacks
         private ArrayList coinPacks = new ArrayList();
         private ArrayList lifePacks = new ArrayList();
  
         public MyClient() {
             thread = new Thread(new ThreadStart(recieveFromServer));
+            this.log = "";
         }
 
         //Send message to the server
-         public void sendToServer(string message,Form1 com) 
+        public void sendToServer(string message,Form1 com) 
         {
             this.com = com; 
             client_1 = new TcpClient();
@@ -83,7 +83,7 @@ namespace MyTankClient
                 {
                     data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
                 }
-
+                
                 if (data.Substring(0,1).Equals("S"))
                 {
                     decodeInitialPlayerLocations(data);
@@ -132,15 +132,15 @@ namespace MyTankClient
             string[] lines = data.Split(delimeters);
             char[] delimeters2 = {',',':'};
             string[] location = lines[1].Split(delimeters2);
-
             //LifePack lp = new LifePack(Int32.Parse(location[0]),Int32.Parse(location[1]),Int32.Parse(lines[2]));
             lifePacks.Add(new LifePack(Int32.Parse(location[0]), Int32.Parse(location[1]), Int32.Parse(lines[2])));
-
+            log = log + "\n" + data;
         }
 
         //this would decode the message stating the current status of the server
         private void decodeCurrentState(string data)
         {
+            log = log + "\n" + data;
             char[] delimeters = { ':', '#' };
             string[] lines = data.Split(delimeters);
             string player1_info = lines[1];
@@ -149,6 +149,7 @@ namespace MyTankClient
             string player4_info = lines[4];
             string player5_info = lines[5];
             string damageLevelsStr = lines[6];
+
 
             char[] delimeters2 = { ';'};
             player1 = player1_info.Split(delimeters2);
@@ -165,6 +166,7 @@ namespace MyTankClient
             p4damage = damage_levels_individually[3].Split(delimeters3);
             p5damage = damage_levels_individually[4].Split(delimeters3);
 
+            log = log + "\n" + data;
         }
 
         //this method would decode the locations of the coins and their values.
@@ -177,6 +179,7 @@ namespace MyTankClient
 
             //CoinPack cp = new CoinPack(Int32.Parse(location[0]), Int32.Parse(location[1]), Int32.Parse(lines[2]),Int32.Parse(lines[3]));
             coinPacks.Add(new CoinPack(Int32.Parse(location[0]), Int32.Parse(location[1]), Int32.Parse(lines[2]), Int32.Parse(lines[3])));
+            log = log + "\n" + data;
         }
 
         //this method would decode data about obstavcles such as bricks, stones & water
@@ -236,6 +239,8 @@ namespace MyTankClient
                     water[1, x / 2] = Int32.Parse(waterStrCordinates[x]);
                 }
             }
+
+            log = log + "\n" + data;
         }
 
         //this method decodes data about 
@@ -254,16 +259,20 @@ namespace MyTankClient
             playerLocationX = Int32.Parse(cordinates[0]);
             playerLocationY = Int32.Parse(cordinates[1]);
             direction = lines[3];
+
+            log = log + "\n" + data;
         }
-        /*
+        
+        //return the list of coin packs
         private ArrayList getCoinPackArray()
         {
             return coinPacks;
         }
 
+        //return the list of life packs
         private ArrayList getLifePackArray()
         {
             return lifePacks;
-        }*/
+        }
     }
 }

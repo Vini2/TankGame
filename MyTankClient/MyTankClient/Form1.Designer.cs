@@ -34,7 +34,7 @@
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnDown = new System.Windows.Forms.Button();
             this.btnShoot = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.LogText = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btnJoin
@@ -97,20 +97,20 @@
             this.btnShoot.UseVisualStyleBackColor = true;
             this.btnShoot.Click += new System.EventHandler(this.btnShoot_Click);
             // 
-            // textBox1
+            // LogText
             // 
-            this.textBox1.Location = new System.Drawing.Point(12, 65);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(407, 165);
-            this.textBox1.TabIndex = 6;
+            this.LogText.Location = new System.Drawing.Point(12, 65);
+            this.LogText.Multiline = true;
+            this.LogText.Name = "LogText";
+            this.LogText.Size = new System.Drawing.Size(407, 165);
+            this.LogText.TabIndex = 6;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(431, 347);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.LogText);
             this.Controls.Add(this.btnShoot);
             this.Controls.Add(this.btnDown);
             this.Controls.Add(this.btnLeft);
@@ -135,7 +135,7 @@
         private System.Windows.Forms.Button btnLeft;
         private System.Windows.Forms.Button btnDown;
         private System.Windows.Forms.Button btnShoot;
-        private System.Windows.Forms.TextBox textBox1;
+        public System.Windows.Forms.TextBox LogText;
     }
 }
 
