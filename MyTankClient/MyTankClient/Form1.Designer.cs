@@ -34,13 +34,14 @@
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnDown = new System.Windows.Forms.Button();
             this.btnShoot = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btnJoin
             // 
-            this.btnJoin.Location = new System.Drawing.Point(244, 35);
+            this.btnJoin.Location = new System.Drawing.Point(12, 12);
             this.btnJoin.Name = "btnJoin";
-            this.btnJoin.Size = new System.Drawing.Size(75, 23);
+            this.btnJoin.Size = new System.Drawing.Size(75, 47);
             this.btnJoin.TabIndex = 0;
             this.btnJoin.Text = "Join";
             this.btnJoin.UseVisualStyleBackColor = true;
@@ -48,7 +49,7 @@
             // 
             // btnUp
             // 
-            this.btnUp.Location = new System.Drawing.Point(56, 35);
+            this.btnUp.Location = new System.Drawing.Point(175, 236);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(75, 23);
             this.btnUp.TabIndex = 1;
@@ -58,7 +59,7 @@
             // 
             // btnRight
             // 
-            this.btnRight.Location = new System.Drawing.Point(56, 93);
+            this.btnRight.Location = new System.Drawing.Point(218, 265);
             this.btnRight.Name = "btnRight";
             this.btnRight.Size = new System.Drawing.Size(75, 23);
             this.btnRight.TabIndex = 2;
@@ -68,7 +69,7 @@
             // 
             // btnLeft
             // 
-            this.btnLeft.Location = new System.Drawing.Point(56, 122);
+            this.btnLeft.Location = new System.Drawing.Point(119, 265);
             this.btnLeft.Name = "btnLeft";
             this.btnLeft.Size = new System.Drawing.Size(75, 23);
             this.btnLeft.TabIndex = 3;
@@ -78,7 +79,7 @@
             // 
             // btnDown
             // 
-            this.btnDown.Location = new System.Drawing.Point(56, 64);
+            this.btnDown.Location = new System.Drawing.Point(175, 294);
             this.btnDown.Name = "btnDown";
             this.btnDown.Size = new System.Drawing.Size(75, 23);
             this.btnDown.TabIndex = 4;
@@ -88,19 +89,28 @@
             // 
             // btnShoot
             // 
-            this.btnShoot.Location = new System.Drawing.Point(244, 64);
+            this.btnShoot.Location = new System.Drawing.Point(344, 12);
             this.btnShoot.Name = "btnShoot";
-            this.btnShoot.Size = new System.Drawing.Size(75, 23);
+            this.btnShoot.Size = new System.Drawing.Size(75, 47);
             this.btnShoot.TabIndex = 5;
             this.btnShoot.Text = "Shoot";
             this.btnShoot.UseVisualStyleBackColor = true;
             this.btnShoot.Click += new System.EventHandler(this.btnShoot_Click);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(12, 65);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(407, 165);
+            this.textBox1.TabIndex = 6;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(431, 347);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.btnShoot);
             this.Controls.Add(this.btnDown);
             this.Controls.Add(this.btnLeft);
@@ -113,6 +123,7 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -124,6 +135,7 @@
         private System.Windows.Forms.Button btnLeft;
         private System.Windows.Forms.Button btnDown;
         private System.Windows.Forms.Button btnShoot;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 

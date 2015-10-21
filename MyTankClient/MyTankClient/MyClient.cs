@@ -141,7 +141,8 @@ namespace MyTankClient
         //this would decode the message stating the current status of the server
         private void decodeCurrentState(string data)
         {
-            string[] lines = Regex.Split(data, ":#");
+            char[] delimeters = { ':', '#' };
+            string[] lines = data.Split(delimeters);
             string player1_info = lines[1];
             string player2_info = lines[2];
             string player3_info = lines[3];
@@ -149,18 +150,20 @@ namespace MyTankClient
             string player5_info = lines[5];
             string damageLevelsStr = lines[6];
 
-            player1 = Regex.Split(player1_info, ";");
-            player2 = Regex.Split(player2_info, ";");
-            player3 = Regex.Split(player3_info, ";");
-            player4 = Regex.Split(player4_info, ";");
-            player5 = Regex.Split(player5_info, ";");
+            char[] delimeters2 = { ';'};
+            player1 = player1_info.Split(delimeters2);
+            player2 = player2_info.Split(delimeters2);
+            player3 = player3_info.Split(delimeters2);
+            player4 = player4_info.Split(delimeters2);
+            player5 = player5_info.Split(delimeters2);
 
-            string[] damage_levels_individually = Regex.Split(damageLevelsStr, ";");
-            p1damage = Regex.Split(damage_levels_individually[0], ",");
-            p2damage = Regex.Split(damage_levels_individually[1], ",");
-            p3damage = Regex.Split(damage_levels_individually[2], ",");
-            p4damage = Regex.Split(damage_levels_individually[3], ",");
-            p5damage = Regex.Split(damage_levels_individually[4], ",");
+            char[] delimeters3 = { ',' };
+            string[] damage_levels_individually = damageLevelsStr.Split(delimeters2);
+            p1damage = damage_levels_individually[0].Split(delimeters3);
+            p2damage = damage_levels_individually[1].Split(delimeters3);
+            p3damage = damage_levels_individually[2].Split(delimeters3);
+            p4damage = damage_levels_individually[3].Split(delimeters3);
+            p5damage = damage_levels_individually[4].Split(delimeters3);
 
         }
 
@@ -179,14 +182,20 @@ namespace MyTankClient
         //this method would decode data about obstavcles such as bricks, stones & water
         private void decodeObstacleLocations(string data)
         {
-            string[] lines = Regex.Split(data, ":#");
+            char[] delimeters = { ':', '#' };
+            char[] delimeters2 = { ';' };
+            char[] delimeters3 = { ',' };
+            char[] delimeters4 = { ';', ',' };
+            string[] lines = data.Split(delimeters);
+            
             string bricksStr = lines[2];
             string stoneStr = lines[3];
             string waterStr = lines[4];
 
-            string[] brickStrCordinates = Regex.Split(bricksStr, ";,");
-            string[] stoneStrCordinates = Regex.Split(bricksStr, ";,");
-            string[] waterStrCordinates = Regex.Split(bricksStr, ";,");
+
+            string[] brickStrCordinates = bricksStr.Split(delimeters4);
+            string[] stoneStrCordinates = stoneStr.Split(delimeters4);
+            string[] waterStrCordinates = waterStr.Split(delimeters4);
 
             bricks = new int[2, (brickStrCordinates.Length / 2)];
             stones = new int[2, (stoneStrCordinates.Length / 2)];
@@ -232,14 +241,21 @@ namespace MyTankClient
         //this method decodes data about 
         private void decodeInitialPlayerLocations(string data)
         {
-            string[] lines = Regex.Split(data, ":");
-            string[] cordinates = Regex.Split(lines[2], ":");
+            char[] delimeters = { ':', '#' };
+            char[] delimeters2 = { ';' };
+            char[] delimeters3 = { ',' };
+            char[] delimeters4 = { ';', ',' };
+
+            string[] lines = data.Split(delimeters);
+
+            string[] cordinates = lines[2].Split(delimeters3);
             playerName = lines[1];
+            Console.WriteLine(cordinates);
             playerLocationX = Int32.Parse(cordinates[0]);
             playerLocationY = Int32.Parse(cordinates[1]);
             direction = lines[3];
         }
-
+        /*
         private ArrayList getCoinPackArray()
         {
             return coinPacks;
@@ -248,6 +264,6 @@ namespace MyTankClient
         private ArrayList getLifePackArray()
         {
             return lifePacks;
-        }
+        }*/
     }
 }

@@ -78,5 +78,7 @@ namespace MyTankClient
         {
             client.sendToServer("LEFT#", this);
         }
+
+        
     }
 }

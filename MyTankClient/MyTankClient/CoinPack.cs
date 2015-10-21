@@ -12,7 +12,6 @@ namespace MyTankClient
 
         public CoinPack(int x, int y, int time, int value)
         {
-            
             this.x = x;
             this.y = y;
             this.time = time;
