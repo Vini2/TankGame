@@ -240,5 +240,14 @@ namespace MyTankClient
             direction = lines[3];
         }
 
+        private ArrayList getCoinPackArray()
+        {
+            return coinPacks;
+        }
+
+        private ArrayList getLifePackArray()
+        {
+            return lifePacks;
+        }
     }
 }
