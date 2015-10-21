@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -18,12 +19,20 @@ namespace MyTankClient
         {
             InitializeComponent();
             client = new MyClient();
-            while (true)
-            {
-                LogText.Text = client.log;
-            }
+            Form1.CheckForIllegalCrossThreadCalls = false;
+            Thread thread = new Thread(new ThreadStart(updateLog));
+            thread.Start();
         }
 
+        public void updateLog()
+        {
+            
+                while (true)
+                {
+                    LogText.Text = client.log;
+                }
+            
+        }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Left)
