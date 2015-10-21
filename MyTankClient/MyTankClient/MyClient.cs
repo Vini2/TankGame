@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -39,7 +40,9 @@ namespace MyTankClient
         //coins and life pakc availability
         private string[][] coins,lifepacks;
 
-
+        private ArrayList coinPacks = new ArrayList();
+        private ArrayList lifePacks = new ArrayList();
+ 
         public MyClient() {
             thread = new Thread(new ThreadStart(recieveFromServer));
         }
@@ -122,21 +125,58 @@ namespace MyTankClient
             }
         }
 
+        //this method would decode the information about the life packs recieved from the server
         private void decodeLifePacks(string data)
         {
-            throw new NotImplementedException();
+            char[] delimeters = {':','#'};
+            string[] lines = data.Split(delimeters);
+            char[] delimeters2 = {',',':'};
+            string[] location = lines[1].Split(delimeters2);
+
+            //LifePack lp = new LifePack(Int32.Parse(location[0]),Int32.Parse(location[1]),Int32.Parse(lines[2]));
+            lifePacks.Add(new LifePack(Int32.Parse(location[0]), Int32.Parse(location[1]), Int32.Parse(lines[2])));
+
         }
 
+        //this would decode the message stating the current status of the server
         private void decodeCurrentState(string data)
         {
-            throw new NotImplementedException();
+            string[] lines = Regex.Split(data, ":#");
+            string player1_info = lines[1];
+            string player2_info = lines[2];
+            string player3_info = lines[3];
+            string player4_info = lines[4];
+            string player5_info = lines[5];
+            string damageLevelsStr = lines[6];
+
+            player1 = Regex.Split(player1_info, ";");
+            player2 = Regex.Split(player2_info, ";");
+            player3 = Regex.Split(player3_info, ";");
+            player4 = Regex.Split(player4_info, ";");
+            player5 = Regex.Split(player5_info, ";");
+
+            string[] damage_levels_individually = Regex.Split(damageLevelsStr, ";");
+            p1damage = Regex.Split(damage_levels_individually[0], ",");
+            p2damage = Regex.Split(damage_levels_individually[1], ",");
+            p3damage = Regex.Split(damage_levels_individually[2], ",");
+            p4damage = Regex.Split(damage_levels_individually[3], ",");
+            p5damage = Regex.Split(damage_levels_individually[4], ",");
+
         }
 
+        //this method would decode the locations of the coins and their values.
         private void decodeCoinLocations(string data)
         {
-            throw new NotImplementedException();
+            char[] delimeters = { ':', '#' };
+            string[] lines = data.Split(delimeters);
+            char[] delimeters2 = { ',', ':' };
+            string[] location = lines[1].Split(delimeters2);
+
+            //CoinPack cp = new CoinPack(Int32.Parse(location[0]), Int32.Parse(location[1]), Int32.Parse(lines[2]),Int32.Parse(lines[3]));
+            coinPacks.Add(new CoinPack(Int32.Parse(location[0]), Int32.Parse(location[1]), Int32.Parse(lines[2]), Int32.Parse(lines[3])));
         }
 
+        //this method would decode data about obstavcles such as bricks, stones & water
         private void decodeObstacleLocations(string data)
         {
             string[] lines = Regex.Split(data, ":#");
@@ -189,6 +229,7 @@ namespace MyTankClient
             }
         }
 
+        //this method decodes data about 
         private void decodeInitialPlayerLocations(string data)
         {
             string[] lines = Regex.Split(data, ":");
