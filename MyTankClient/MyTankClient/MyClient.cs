@@ -48,6 +48,7 @@ namespace MyTankClient
             
         }
 
+        //DONE
         //Send message to the server
         public void sendToServer(string message,Form1 com) 
         {
@@ -66,6 +67,7 @@ namespace MyTankClient
                 thread.Start();
         }
 
+        //DONE
         //Get messages from server
         public void recieveFromServer() 
         {
@@ -140,6 +142,7 @@ namespace MyTankClient
             
         }
 
+        //DONE
         //this would decode the message stating the current status of the server
         private void decodeCurrentState(string data)
         {
@@ -231,6 +234,7 @@ namespace MyTankClient
             }
         }
 
+        //Needs to be implemented
         private void removeBrick()
         {
             throw new NotImplementedException();
