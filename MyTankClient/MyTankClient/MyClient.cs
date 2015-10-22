@@ -26,25 +26,26 @@ namespace MyTankClient
         private Form1 com;
 
         private Thread thread;
-        public string log { get; set; }
 
-        //to keep the initial player details
-        private int playerLocationX, playerLocationY;
-        private string playerName,direction;
-        
-        //initial locations of bricks,stones & water
-        private int[,] bricks,stones,water;
-
-        //details of each players and damage levels
-        private string[] player1, player2, player3, player4, player5,p1damage,p2damage,p3damage,p4damage,p5damage;
-
-        //To keep the list of coins and LifePacks
+        //To keep the list of tanks,coins,LifePacks,bricks,water & stones
         private ArrayList coinPacks = new ArrayList();
         private ArrayList lifePacks = new ArrayList();
- 
+        private ArrayList tankList = new ArrayList();
+        private ArrayList brickList = new ArrayList();
+        private ArrayList waterList = new ArrayList();
+        private ArrayList stoneList = new ArrayList();
+
+        //this is the tank controlled with my AI algorithm
+        Player my_tank;
+
+        //this contains the number of tanks in the game
+        int numberOfTanks = 0;
+        int numberOfBricks = 0;
+
+        //the constructor
         public MyClient() {
             thread = new Thread(new ThreadStart(recieveFromServer));
-            this.log = "";
+            
         }
 
         //Send message to the server
@@ -108,16 +109,7 @@ namespace MyTankClient
                 string[] lines = Regex.Split(data, ":");
                     com.Invoke(new Action(() =>
                     {
-                        if (lines.Length == 5)
-                        {
-                            //com.displayData("gggggggggggg");
-                            Console.Write("ggggg");
-                        }
-                        else
-                        {
-                            //com.displayData("\n message => \n"+data + "\n");
-                            Console.Write("\n message => \n" + data + "\n");
-                        }
+                        
                     }));
                 streamRecieve.Close();
                 listner.Stop();
@@ -125,127 +117,242 @@ namespace MyTankClient
             }
         }
 
+        //DONE
         //this method would decode the information about the life packs recieved from the server
         private void decodeLifePacks(string data)
         {
+            //L:<x>,<y>:<LT>#
+
             char[] delimeters = {':','#'};
             string[] lines = data.Split(delimeters);
-            char[] delimeters2 = {',',':'};
+            Console.WriteLine("Decoding lifepack locations");
+            foreach (string item in lines)
+            {
+                Console.Write(item + " ");
+            }
+            Console.WriteLine();
+
+            //L   <x>,<y>  <LT>
+
+            char[] delimeters2 = {','};
             string[] location = lines[1].Split(delimeters2);
-            //LifePack lp = new LifePack(Int32.Parse(location[0]),Int32.Parse(location[1]),Int32.Parse(lines[2]));
             lifePacks.Add(new LifePack(Int32.Parse(location[0]), Int32.Parse(location[1]), Int32.Parse(lines[2])));
-            log = log + "\n" + data;
+            
         }
 
         //this would decode the message stating the current status of the server
         private void decodeCurrentState(string data)
         {
-            log = log + "\n" + data;
+            //G  P1;<x>,<y>;<Dir>;<shotes?>;<health>;<coins>;<points>   ....   P5;<x>,<y>;<Dir>;<shotes?>;<health>;<coins>;<points>         <x>,<y>,<damage>;   .....   <x>,<y>,<damage># 
+
             char[] delimeters = { ':', '#' };
-            string[] lines = data.Split(delimeters);
-            string player1_info = lines[1];
-            string player2_info = lines[2];
-            string player3_info = lines[3];
-            string player4_info = lines[4];
-            string player5_info = lines[5];
-            string damageLevelsStr = lines[6];
-
-
-            char[] delimeters2 = { ';'};
-            player1 = player1_info.Split(delimeters2);
-            player2 = player2_info.Split(delimeters2);
-            player3 = player3_info.Split(delimeters2);
-            player4 = player4_info.Split(delimeters2);
-            player5 = player5_info.Split(delimeters2);
-
+            char[] delimeters2 = { ';' };
             char[] delimeters3 = { ',' };
-            string[] damage_levels_individually = damageLevelsStr.Split(delimeters2);
-            p1damage = damage_levels_individually[0].Split(delimeters3);
-            p2damage = damage_levels_individually[1].Split(delimeters3);
-            p3damage = damage_levels_individually[2].Split(delimeters3);
-            p4damage = damage_levels_individually[3].Split(delimeters3);
-            p5damage = damage_levels_individually[4].Split(delimeters3);
+            string[] lines = data.Split(delimeters);
 
-            log = log + "\n" + data;
+
+            Console.WriteLine("Decoding current state");
+            foreach (string item in lines)
+            {
+                Console.Write(item + " ");
+            }
+            Console.WriteLine();
+
+            for (int x = 1; x <= numberOfTanks; x++)
+            {
+                string[] playerDetails = lines[x].Split(delimeters2);
+                string name = playerDetails[0];
+                string[] cordinates = playerDetails[1].Split(delimeters3);
+                int xCor = Int32.Parse(cordinates[0]);
+                int yCor = Int32.Parse(cordinates[1]);
+                int dir = Int32.Parse(playerDetails[2]);
+                int shots = Int32.Parse(playerDetails[3]);
+                string health = playerDetails[4];
+                int coins = Int32.Parse(playerDetails[5]);
+                int points = Int32.Parse(playerDetails[6]);
+
+                string damage = lines[x + numberOfTanks];
+                string[] dmg = damage.Split(delimeters3);
+                int dmgX = Int32.Parse(dmg[0]);
+                int dmgY = Int32.Parse(dmg[1]);
+                int dmgInt = Int32.Parse(dmg[2]);
+
+                foreach (Player tank in tankList)
+                {
+                    if (tank.name.Equals(name))
+                    {
+                        tank.x = xCor;
+                        tank.y = yCor;
+                        tank.direction = dir;
+                        tank.health = health;
+                        tank.coins = coins;
+                        tank.points = points;
+                    }
+                }
+
+
+            }
+            for (int y = numberOfTanks; y < numberOfTanks + numberOfBricks; y++)
+            {
+                string damage = lines[y];
+                string[] dmg = damage.Split(delimeters3);
+                int dmgX = Int32.Parse(dmg[0]);
+                int dmgY = Int32.Parse(dmg[1]);
+                int dmgInt = Int32.Parse(dmg[2]);
+
+                foreach (Brick brick in brickList)
+                {
+                    if (brick.x == dmgX && brick.y == dmgY)
+                    {
+                        if (dmgInt == 0)
+                        {
+                            brick.damage = 0;
+                        }
+                        else if (dmgInt == 1)
+                        {
+                            brick.damage = 25;
+                        }
+                        else if (dmgInt == 2)
+                        {
+                            brick.damage = 50;
+                        }
+                        else if (dmgInt == 3)
+                        {
+                            brick.damage = 75;
+                        }
+                        else if (dmgInt == 4)
+                        {
+                            brick.damage = 100;
+                            removeBrick();
+                        }
+
+                    }
+                }
+            }
         }
 
+        private void removeBrick()
+        {
+            throw new NotImplementedException();
+        }
+
+        //DONE
         //this method would decode the locations of the coins and their values.
         private void decodeCoinLocations(string data)
         {
+            //C:<x>,<y>:<LT>:<Val>#
             char[] delimeters = { ':', '#' };
             string[] lines = data.Split(delimeters);
-            char[] delimeters2 = { ',', ':' };
+
+            Console.WriteLine("Decoding coin locations");
+            foreach (string item in lines)
+            {
+                Console.Write(item + " ");
+            }
+            Console.WriteLine();
+
+            //C   <x>,<y>    <LT>   <Val>
+
+            char[] delimeters2 = {','};
             string[] location = lines[1].Split(delimeters2);
 
-            //CoinPack cp = new CoinPack(Int32.Parse(location[0]), Int32.Parse(location[1]), Int32.Parse(lines[2]),Int32.Parse(lines[3]));
             coinPacks.Add(new CoinPack(Int32.Parse(location[0]), Int32.Parse(location[1]), Int32.Parse(lines[2]), Int32.Parse(lines[3])));
-            log = log + "\n" + data;
+            
         }
 
+        //DONE
         //this method would decode data about obstavcles such as bricks, stones & water
         private void decodeObstacleLocations(string data)
         {
+            //I:P1: < x>,<y>;< x>,<y>;< x>,<y>…..< x>,<y>: < x>,<y>;< x>,<y>;< x>,<y>…..< x>,<y>: < x>,<y>;< x>,<y>;< x>,<y>…..< x>,<y>#
+
             char[] delimeters = { ':', '#' };
             char[] delimeters2 = { ';' };
             char[] delimeters3 = { ',' };
             char[] delimeters4 = { ';', ',' };
             string[] lines = data.Split(delimeters);
-            
+
+            my_tank = new Player(lines[1]);
+
+            Console.WriteLine("Decoding obstacle locations");
+            foreach (string item in lines)
+            {
+                Console.Write(item + " ");
+            }
+            Console.WriteLine();
+
             string bricksStr = lines[2];
             string stoneStr = lines[3];
             string waterStr = lines[4];
+
 
 
             string[] brickStrCordinates = bricksStr.Split(delimeters4);
             string[] stoneStrCordinates = stoneStr.Split(delimeters4);
             string[] waterStrCordinates = waterStr.Split(delimeters4);
 
-            bricks = new int[2, (brickStrCordinates.Length / 2)];
-            stones = new int[2, (stoneStrCordinates.Length / 2)];
-            water = new int[2, (waterStrCordinates.Length / 2)];
-            
+            //bricks = new int[2, (brickStrCordinates.Length / 2)];
+            //stones = new int[2, (stoneStrCordinates.Length / 2)];
+            //water = new int[2, (waterStrCordinates.Length / 2)];
+
+            int xLoc = 0, yLoc = 0;
             for (int x = 0; x < brickStrCordinates.Length; x++)
             {
+                
                 if (x % 2 == 0)
                 {
-                    bricks[0, x/2] = Int32.Parse(brickStrCordinates[x]);
+                    xLoc = Int32.Parse(brickStrCordinates[x]);
+                    //bricks[0, x/2] = Int32.Parse(brickStrCordinates[x]);
                 }
                 else
                 {
-                    bricks[1, x / 2] = Int32.Parse(brickStrCordinates[x]);
+                    yLoc = Int32.Parse(brickStrCordinates[x]);
+                    //bricks[1, x / 2] = Int32.Parse(brickStrCordinates[x]);
                 }
+                brickList.Add(new Brick(xLoc, yLoc));
+                numberOfBricks += 1;
             }
 
             for (int x = 0; x < stoneStrCordinates.Length; x++)
             {
+                
                 if (x % 2 == 0)
                 {
-                    stones[0, x / 2] = Int32.Parse(stoneStrCordinates[x]);
+                    xLoc = Int32.Parse(stoneStrCordinates[x]);
+                    //stones[0, x / 2] = Int32.Parse(stoneStrCordinates[x]);
                 }
                 else
                 {
-                    stones[1, x / 2] = Int32.Parse(stoneStrCordinates[x]);
+                    yLoc = Int32.Parse(stoneStrCordinates[x]);
+                    //stones[1, x / 2] = Int32.Parse(stoneStrCordinates[x]);
                 }
+                stoneList.Add(new Stone(xLoc, yLoc));
             }
 
             for (int x = 0; x < waterStrCordinates.Length; x++)
             {
+                
                 if (x % 2 == 0)
                 {
-                    water[0, x / 2] = Int32.Parse(waterStrCordinates[x]);
+                    xLoc = Int32.Parse(waterStrCordinates[x]);
+                    //water[0, x / 2] = Int32.Parse(waterStrCordinates[x]);
                 }
                 else
                 {
-                    water[1, x / 2] = Int32.Parse(waterStrCordinates[x]);
+                    yLoc = Int32.Parse(waterStrCordinates[x]);
+                    //water[1, x / 2] = Int32.Parse(waterStrCordinates[x]);
                 }
+                waterList.Add(new Water(xLoc, yLoc));
+
             }
 
-            log = log + "\n" + data;
         }
 
+        //DONE
         //this method decodes data about 
         private void decodeInitialPlayerLocations(string data)
         {
+            // S:P0;0,0;0:P1;0,9;0#
             char[] delimeters = { ':', '#' };
             char[] delimeters2 = { ';' };
             char[] delimeters3 = { ',' };
@@ -253,22 +360,53 @@ namespace MyTankClient
 
             string[] lines = data.Split(delimeters);
 
-            string[] cordinates = lines[2].Split(delimeters3);
-            playerName = lines[1];
-            Console.WriteLine(cordinates);
-            playerLocationX = Int32.Parse(cordinates[0]);
-            playerLocationY = Int32.Parse(cordinates[1]);
-            direction = lines[3];
+            int numberOfPlayers = lines.Length - 1;
 
-            log = log + "\n" + data;
+            for (int x = 1; x<=numberOfPlayers; x++)
+            {
+                // S  P0;0,0;0   P1;0,9;0
+                string[] lines2 = lines[x].Split(delimeters2);
+                if (lines2[0].Equals(my_tank.name))
+                {
+                    my_tank.x = Int32.Parse(lines2[1].Split(delimeters3)[0]);
+                    my_tank.y = Int32.Parse(lines2[1].Split(delimeters3)[1]);
+                    my_tank.direction = Int32.Parse(lines2[2]);
+                    tankList.Add(my_tank);
+                    continue;
+                }
+                else
+                {
+                    string name = lines2[0];
+                    int xLoc = Int32.Parse(lines2[1].Split(delimeters3)[0]);
+                    int yLoc = Int32.Parse(lines2[1].Split(delimeters3)[1]);
+                    int direction = Int32.Parse(lines2[2]);
+                    tankList.Add(new Player(name,xLoc,yLoc,direction));
+                }
+                
+            }
+            
+            Console.WriteLine("Decoding initial player locations");
+            foreach (string item in lines)
+            {
+                Console.Write(item + " ");
+            }
+            Console.WriteLine();
+
         }
         
+        //DONE
         //return the list of coin packs
         private ArrayList getCoinPackArray()
         {
             return coinPacks;
         }
-
+        //DONE
+        //return the list of tanks
+        private ArrayList getTankArray()
+        {
+            return tankList;
+        }
+        //DONE
         //return the list of life packs
         private ArrayList getLifePackArray()
         {
