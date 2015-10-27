@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,23 +15,22 @@ namespace MyTankClient
     public partial class Form1 : Form
     {
         MyClient client;
-       
+
+        private string mapString = "";
         public Form1()
         {
             InitializeComponent();
             client = new MyClient();
             Form1.CheckForIllegalCrossThreadCalls = false;
-            Thread thread = new Thread(new ThreadStart(updateLog));
+            Thread thread = new Thread(new ThreadStart(updateMap));
             thread.Start();
         }
 
-        public void updateLog()
+        public void updateMap()
         {
-            
-                while (true)
-                {
-                    LogText.Text = client.log;
-                }
+            ArrayList 
+                  
+                
             
         }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -90,6 +90,11 @@ namespace MyTankClient
         private void btnLeft_Click(object sender, EventArgs e)
         {
             client.sendToServer("LEFT#", this);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
 
 

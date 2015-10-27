@@ -35,6 +35,7 @@ namespace MyTankClient
         private ArrayList waterList = new ArrayList();
         private ArrayList stoneList = new ArrayList();
 
+        private string[,] matrix = new string[20,20];
         //this is the tank controlled with my AI algorithm
         Player my_tank;
 
@@ -400,21 +401,41 @@ namespace MyTankClient
         
         //DONE
         //return the list of coin packs
-        private ArrayList getCoinPackArray()
+        public ArrayList getCoinPackArray()
         {
             return coinPacks;
         }
         //DONE
         //return the list of tanks
-        private ArrayList getTankArray()
+        public ArrayList getTankArray()
         {
             return tankList;
         }
         //DONE
         //return the list of life packs
-        private ArrayList getLifePackArray()
+        public ArrayList getLifePackArray()
         {
             return lifePacks;
+        }
+
+        public ArrayList getBrickArray()
+        {
+            return brickList;
+        }
+
+        public ArrayList getWaterArray()
+        {
+            return waterList;
+        }
+
+        public ArrayList getStoneArray()
+        {
+            return stoneList;
+        }
+
+        public void locationString()
+        {
+            
         }
     }
 }

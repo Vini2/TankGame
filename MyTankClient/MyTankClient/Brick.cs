@@ -10,6 +10,7 @@ namespace MyTankClient
     {
         public int x { get; set; }
         public int y { get; set; }
+        public int damage { get; set; }
         public Brick(int x, int y)
         {
             this.x = x;

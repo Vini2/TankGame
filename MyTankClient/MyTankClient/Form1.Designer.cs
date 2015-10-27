@@ -49,7 +49,7 @@
             // 
             // btnUp
             // 
-            this.btnUp.Location = new System.Drawing.Point(175, 236);
+            this.btnUp.Location = new System.Drawing.Point(175, 352);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(75, 23);
             this.btnUp.TabIndex = 1;
@@ -59,7 +59,7 @@
             // 
             // btnRight
             // 
-            this.btnRight.Location = new System.Drawing.Point(218, 265);
+            this.btnRight.Location = new System.Drawing.Point(218, 381);
             this.btnRight.Name = "btnRight";
             this.btnRight.Size = new System.Drawing.Size(75, 23);
             this.btnRight.TabIndex = 2;
@@ -69,7 +69,7 @@
             // 
             // btnLeft
             // 
-            this.btnLeft.Location = new System.Drawing.Point(119, 265);
+            this.btnLeft.Location = new System.Drawing.Point(119, 381);
             this.btnLeft.Name = "btnLeft";
             this.btnLeft.Size = new System.Drawing.Size(75, 23);
             this.btnLeft.TabIndex = 3;
@@ -79,7 +79,7 @@
             // 
             // btnDown
             // 
-            this.btnDown.Location = new System.Drawing.Point(175, 294);
+            this.btnDown.Location = new System.Drawing.Point(175, 410);
             this.btnDown.Name = "btnDown";
             this.btnDown.Size = new System.Drawing.Size(75, 23);
             this.btnDown.TabIndex = 4;
@@ -102,14 +102,14 @@
             this.LogText.Location = new System.Drawing.Point(12, 65);
             this.LogText.Multiline = true;
             this.LogText.Name = "LogText";
-            this.LogText.Size = new System.Drawing.Size(407, 165);
+            this.LogText.Size = new System.Drawing.Size(407, 281);
             this.LogText.TabIndex = 6;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(431, 347);
+            this.ClientSize = new System.Drawing.Size(431, 458);
             this.Controls.Add(this.LogText);
             this.Controls.Add(this.btnShoot);
             this.Controls.Add(this.btnDown);
@@ -120,6 +120,7 @@
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             this.ResumeLayout(false);
