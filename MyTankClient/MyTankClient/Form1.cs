@@ -28,7 +28,7 @@ namespace MyTankClient
 
         public void updateMap()
         {
-            ArrayList 
+             
                   
                 
             
