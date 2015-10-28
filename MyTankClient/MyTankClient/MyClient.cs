@@ -81,7 +81,6 @@ namespace MyTankClient
 
             foreach(CoinPack item in coinPacks)
             {
-                Console.Write("Item time coin: " + item.time + " ");
                 if (item.time > 0)
                 {
                     
@@ -92,7 +91,6 @@ namespace MyTankClient
             Console.WriteLine();
             foreach (LifePack item in lifePacks)
             {
-                Console.Write("Item time coin: " + item.time + " ");
                 if (item.time > 0)
                 {
                     map[item.y, item.x] = "L";
@@ -194,11 +192,6 @@ namespace MyTankClient
             char[] delimeters = {':','#'};
             string[] lines = data.Split(delimeters);
             Console.WriteLine("Decoding lifepack locations");
-            foreach (string item in lines)
-            {
-                Console.Write(item + " ");
-            }
-            Console.WriteLine();
 
             //L   <x>,<y>  <LT>
 
@@ -222,24 +215,13 @@ namespace MyTankClient
             char[] delimeters3 = { ',' };
             string[] lines = data.Split(delimeters);
 
-
             Console.WriteLine("Decoding current state");
-            foreach (string item in lines)
-            {
-                Console.Write(item + " ");
-            }
-            Console.WriteLine();
 
             for (int x = 1; x < numberOfTanks; x++)
             {
                 
                 string[] playerDetails = lines[x].Split(delimeters2);
                 Console.WriteLine("Decoding player details");
-                foreach (string item in playerDetails)
-                {
-                    Console.Write(item + " ");
-                }
-                Console.WriteLine();
 
                 string name = playerDetails[0];
                 string[] cordinates = playerDetails[1].Split(delimeters3);
@@ -342,16 +324,11 @@ namespace MyTankClient
             }
 
             string damage = lines[numberOfTanks];
-            Console.WriteLine(damage);
             string[] damageBricks = damage.Split(delimeters2);
             for (int y = 0; y < damageBricks.Length; y++)
             {
                 string[] dmg = damageBricks[y].Split(delimeters3);
-                foreach (string item in dmg)
-                {
-                    Console.Write(item+" ");
-                }
-                Console.WriteLine();
+                
                 int dmgX = Int32.Parse(dmg[0]);
                 int dmgY = Int32.Parse(dmg[1]);
                 int dmgInt = Int32.Parse(dmg[2]);
@@ -437,7 +414,6 @@ namespace MyTankClient
             my_name = lines[1];
             Console.WriteLine("Decoding obstacle locations");
             
-
             string bricksStr = lines[2];
             string stoneStr = lines[3];
             string waterStr = lines[4];
