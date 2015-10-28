@@ -16,7 +16,6 @@ namespace MyTankClient
     {
         MyClient client;
 
-        private string mapString = "";
         public Form1()
         {
             InitializeComponent();
@@ -26,13 +25,16 @@ namespace MyTankClient
             thread.Start();
         }
 
-        public void updateMap()
+        protected void updateMap()
         {
-             
+            
+                
                   
                 
             
         }
+
+        
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Left)
