@@ -28,42 +28,49 @@ namespace MyTankClient
 
         private Thread thread;
 
-        public string[,] map = new string[10, 10];
+        public static string[,] map = new string[10, 10];
 
         //To keep the list of tanks,coins,LifePacks,bricks,water & stones
-        private ArrayList coinPacks = new ArrayList();
-        private ArrayList lifePacks = new ArrayList();
-        private ArrayList tankList = new ArrayList();
-        private ArrayList brickList = new ArrayList();
-        private ArrayList waterList = new ArrayList();
-        private ArrayList stoneList = new ArrayList();
+        private static ArrayList coinPacks = new ArrayList();
+        private static ArrayList lifePacks = new ArrayList();
+        private static ArrayList tankList = new ArrayList();
+        private static ArrayList brickList = new ArrayList();
+        private static ArrayList waterList = new ArrayList();
+        private static ArrayList stoneList = new ArrayList();
 
         private string[,] matrix = new string[20,20];
-        //this is the tank controlled with my AI algorithm
-        Player my_tank;
-        string my_name = " ";
+        
         //this contains the number of tanks in the game
         int numberOfTanks = 0;
         int numberOfBricks = 0;
+
         //the constructor
         public MyClient() {
             thread = new Thread(new ThreadStart(recieveFromServer));
         }
 
+        //this function would print out the current map on the Console
         public void printMap()
         {
+            foreach (Player tank in tankList)
+            {
+                Console.WriteLine(tank.name);
+                int x = tank.x;
+                int y = tank.y;
+                map[y, x] = "T";
+            }
             Console.WriteLine("Printing map");
             for (int x = 0; x < 10; x++)
             {
                 for (int y = 0; y < 10; y++)
                 {
-                    Console.Write(map[x, y]+ " " );
+                    Console.Write(map[x, y] + " ");
                 }
                 Console.WriteLine();
             }
-            Console.WriteLine();
         }
 
+        //this method would update the map with coins and life packs
         public void updateMap()
         {
            
@@ -76,7 +83,6 @@ namespace MyTankClient
                         map[x, y] = "_";
                     }
                 }
-                Console.WriteLine();
             }
 
             foreach(CoinPack item in coinPacks)
@@ -88,7 +94,6 @@ namespace MyTankClient
                 }
             }
 
-            Console.WriteLine();
             foreach (LifePack item in lifePacks)
             {
                 if (item.time > 0)
@@ -98,8 +103,22 @@ namespace MyTankClient
             }
 
 
+
         }
 
+        //this would update the locations of the tanks
+        public static void updateTanks()
+        {
+            foreach (Player tank in tankList)
+            {
+                int xCor = tank.x;
+                int yCor = tank.y;
+                map[yCor, xCor] = "_";
+
+            }
+        }
+
+        //this method would decrement the time of life packs and update them
         public void updateCoinsAndLifepacks()
         {
 
@@ -114,6 +133,7 @@ namespace MyTankClient
             }
 
         }
+
         //Send message to the server
         public void sendToServer(string message,Form1 com) 
         {
@@ -172,6 +192,42 @@ namespace MyTankClient
                 {
                     decodeLifePacks(data);
                 }
+                else
+                {
+                    if (data.Equals("OBSTACLE#"))
+                    {
+                        Console.WriteLine("OBSTACLE :( ");
+                    }
+                    else if (data.Equals("CELL_OCCUPIED#"))
+                    {
+                        Console.WriteLine("CELL_OCCUPIED#");
+                    }
+                    else if (data.Equals("DEAD#"))
+                    {
+                        Console.WriteLine("DEAD#");
+                    }
+                    else if (data.Equals("TOO_QUICK#"))
+                    {
+                        Console.WriteLine("TOO_QUICK#");
+                    }
+                    else if (data.Equals("INVALID_CELL#"))
+                    {
+                        Console.WriteLine("INVALID_CELL#");
+                    }
+                    else if (data.Equals("GAME_HAS_FINISHED#"))
+                    {
+                        Console.WriteLine("GAME_HAS_FINISHED#");
+                    }
+                    else if (data.Equals("GAME_NOT_STARTED_YET#"))
+                    {
+                        Console.WriteLine("GAME_NOT_STARTED_YET#");
+                    }
+                    else if (data.Equals("NOT_A_VALID_CONTESTANT#"))
+                    {
+                        Console.WriteLine("NOT_A_VALID_CONTESTANT#");
+                    }
+
+                }
 
                 string[] lines = Regex.Split(data, ":");
                     com.Invoke(new Action(() =>
@@ -197,7 +253,10 @@ namespace MyTankClient
 
             char[] delimeters2 = {','};
             string[] location = lines[1].Split(delimeters2);
+
+            //this would add the newly created life packs to the life packs list
             lifePacks.Add(new LifePack(Int32.Parse(location[0]), Int32.Parse(location[1]), Int32.Parse(lines[2])/1000)); 
+            
             //this adds the life packs to the life pack array 
             map[Int32.Parse(location[1]), Int32.Parse(location[0])] = "L";
             updateMap();
@@ -217,9 +276,10 @@ namespace MyTankClient
 
             Console.WriteLine("Decoding current state");
 
+            //this for loop would traverse throught the list of string which has details about the tanks
+            //and would decode the details and update relevent tanks in the tank list
             for (int x = 1; x < numberOfTanks; x++)
             {
-                
                 string[] playerDetails = lines[x].Split(delimeters2);
                 Console.WriteLine("Decoding player details");
 
@@ -233,58 +293,10 @@ namespace MyTankClient
                 int coins = Int32.Parse(playerDetails[5]);
                 int points = Int32.Parse(playerDetails[6]);
 
-                for (int k = 0; k < 10; k ++)
-                {
-                    for (int y = 0; y < 10; y++)
-                    {
-                        if (map[k, y].Equals("M") || map[k, y].Equals("T"))
-                        {
-                            map[k, y] = "_";
-                        }
-                    }
-                }
-
+                updateTanks();
                 foreach (Player tank in tankList)
                 {
-                    if (tank.name.Equals(my_name))
-                    {
-                        tank.x = xCor;
-                        tank.y = yCor;
-                        tank.direction = dir;
-                        tank.health = health;
-                        tank.coins = coins;
-                        tank.points = points;
-
-
-                        if (map[tank.y, tank.x].Equals("C"))
-                        {
-                            foreach (CoinPack item in coinPacks)
-                            {
-                                if (item.x == tank.x && item.y == tank.y)
-                                {
-                                    item.time = -1;
-                                }
-                            }
-
-                            
-                        }
-                        else if (map[tank.y, tank.x].Equals("L"))
-                        {
-                            foreach (LifePack item in lifePacks)
-                            {
-                                if (item.x == tank.x && item.y == tank.y)
-                                {
-                                    item.time = -1;
-                                }
-                            }
-
-                        }
-
-                        map[tank.y, tank.x] = "M";
-                         
-                            
-                    }
-                    else if (tank.name.Equals(name))
+                    if (tank.name.Equals(name))
                     {
                         tank.x = xCor;
                         tank.y = yCor;
@@ -317,52 +329,62 @@ namespace MyTankClient
 
                         }
 
-                        map[tank.y, tank.x] = "T";
+                        map[tank.y, tank.x] = "T"; 
 
                     }
                 }
             }
 
+            //This section would decode the details about damage levels of bridge
             string damage = lines[numberOfTanks];
             string[] damageBricks = damage.Split(delimeters2);
-            for (int y = 0; y < damageBricks.Length; y++)
+            try
             {
-                string[] dmg = damageBricks[y].Split(delimeters3);
-                
-                int dmgX = Int32.Parse(dmg[0]);
-                int dmgY = Int32.Parse(dmg[1]);
-                int dmgInt = Int32.Parse(dmg[2]);
-
-                foreach (Brick brick in brickList)
+                for (int y = 0; y < damageBricks.Length; y++)
                 {
-                    if (brick.x == dmgX && brick.y == dmgY)
-                    {
-                        if (dmgInt == 0)
-                        {
-                            brick.damage = 0;
-                        }
-                        else if (dmgInt == 1)
-                        {
-                            brick.damage = 25;
-                        }
-                        else if (dmgInt == 2)
-                        {
-                            brick.damage = 50;
-                        }
-                        else if (dmgInt == 3)
-                        {
-                            brick.damage = 75;
-                        }
-                        else if (dmgInt == 4)
-                        {
-                            brick.damage = 100;
-                            removeBrick();
-                            map[brick.y, brick.x] = "_";
-                        }
+                    string[] dmg = damageBricks[y].Split(delimeters3);
 
+
+                    int dmgX = Int32.Parse(dmg[0]);
+                    int dmgY = Int32.Parse(dmg[1]);
+                    int dmgInt = Int32.Parse(dmg[2]);
+
+                    foreach (Brick brick in brickList)
+                    {
+                        if (brick.x == dmgX && brick.y == dmgY)
+                        {
+                            if (dmgInt == 0)
+                            {
+                                brick.damage = 0;
+                            }
+                            else if (dmgInt == 1)
+                            {
+                                brick.damage = 25;
+                            }
+                            else if (dmgInt == 2)
+                            {
+                                brick.damage = 50;
+                            }
+                            else if (dmgInt == 3)
+                            {
+                                brick.damage = 75;
+                            }
+                            else if (dmgInt == 4)
+                            {
+                                brick.damage = 100;
+                                removeBrick();
+                                map[brick.y, brick.x] = "_";
+                            }
+
+                        }
                     }
                 }
             }
+            catch (Exception e)
+            {
+                
+            }
+
             updateMap();
             printMap();
         }
@@ -410,8 +432,7 @@ namespace MyTankClient
             char[] delimeters4 = { ';', ',' };
             string[] lines = data.Split(delimeters);
 
-            my_tank = new Player(lines[1]);
-            my_name = lines[1];
+            
             Console.WriteLine("Decoding obstacle locations");
             
             string bricksStr = lines[2];
@@ -496,29 +517,17 @@ namespace MyTankClient
                 // S  P0;0,0;0   P1;0,9;0
                 string[] lines2 = lines[x].Split(delimeters2);
                 string[] my_tankXY = lines2[1].Split(delimeters3);
-                if (lines2[0].Equals(my_name))
-                {
-                    my_tank.x = Int32.Parse(my_tankXY[0]);
-                    my_tank.y = Int32.Parse(my_tankXY[1]);
-                    my_tank.direction = Int32.Parse(lines2[2]);
-                    tankList.Add(my_tank);
-                    map[my_tank.y, my_tank.x] = "M";
-                    continue;
-                }
-                else
-                {
+                
                     string name = lines2[0];
                     int xLoc = Int32.Parse(my_tankXY[0]);
                     int yLoc = Int32.Parse(my_tankXY[1]);
                     int direction = Int32.Parse(lines2[2]);
                     tankList.Add(new Player(name,xLoc,yLoc,direction));
                     map[yLoc, xLoc] = "T";
-                }
                 
             }
             
             Console.WriteLine("Decoding initial player locations");
-            
             updateMap();
             printMap();
 
