@@ -117,6 +117,7 @@
             this.Controls.Add(this.btnRight);
             this.Controls.Add(this.btnUp);
             this.Controls.Add(this.btnJoin);
+            this.KeyPreview = true;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";

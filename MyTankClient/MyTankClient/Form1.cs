@@ -16,9 +16,18 @@ namespace MyTankClient
     {
         MyClient client;
 
+        // Create a logger for use in this class
+        private static log4net.ILog log = log4net.LogManager.GetLogger(typeof(Form1));
+
         public Form1()
         {
+            //Initiate logging based on XML configuration
+            log4net.Config.XmlConfigurator.Configure();
+
             InitializeComponent();
+            //Call the logger
+            log.Info("Components initialized...");
+
             client = new MyClient();
             Form1.CheckForIllegalCrossThreadCalls = false;
             Thread thread = new Thread(new ThreadStart(updateMap));
@@ -37,26 +46,7 @@ namespace MyTankClient
         
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Left)
-            {
-                client.sendToServer("LEFT#", this);
-            }
-            else if (e.KeyCode == Keys.Right)
-            {
-                client.sendToServer("RIGHT#", this);
-            }
-            else if (e.KeyCode == Keys.Up)
-            {
-                client.sendToServer("UP#", this);
-            }
-            else if (e.KeyCode == Keys.Down)
-            {
-                client.sendToServer("DOWN#", this);
-            }
-            else if (e.KeyCode == Keys.A)
-            {
-                client.sendToServer("SHOOT#", this);
-            }
+            
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
@@ -96,9 +86,19 @@ namespace MyTankClient
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            foreach (Control control in this.Controls)
+            {
+                control.PreviewKeyDown += new PreviewKeyDownEventHandler(control_PreviewKeyDown);
+            }
         }
 
+        void control_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right || e.KeyCode == Keys.A)
+            {
+                e.IsInputKey = true;
+            }
+        }
 
         
     }
