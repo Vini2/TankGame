@@ -16,9 +16,6 @@ namespace MyTankClient
     class MyClient
     {
 
-        // Create a logger for use in this class
-        private static log4net.ILog log = log4net.LogManager.GetLogger(typeof(Form1));
-
         private TcpClient client_1;
         private string ip = "127.0.0.1";
      
@@ -50,13 +47,7 @@ namespace MyTankClient
         int numberOfBricks = 0;
         //the constructor
         public MyClient() {
-
-            //Initiate logging based on XML configuration
-            log4net.Config.XmlConfigurator.Configure();
-
             thread = new Thread(new ThreadStart(recieveFromServer));
-            //Call the logger
-            log.Info("Thread started");
         }
 
         public void printMap()
