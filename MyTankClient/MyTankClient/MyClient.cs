@@ -15,7 +15,6 @@ namespace MyTankClient
 {
     class MyClient
     {
-
         private TcpClient client_1;
         private string ip = "127.0.0.1";
      
@@ -26,7 +25,7 @@ namespace MyTankClient
 
         private Form1 com;
 
-        private Thread thread;
+        private Thread thread,thread2;
 
         public static string[,] map = new string[10, 10];
 
@@ -47,6 +46,16 @@ namespace MyTankClient
         //the constructor
         public MyClient() {
             thread = new Thread(new ThreadStart(recieveFromServer));
+            //thread2 = new Thread(new ThreadStart(update));
+        }
+
+        public static void update()
+        {
+            while (true)
+            {
+                updateCoinsAndLifepacks();
+                Thread.Sleep(800);
+            }
         }
 
         //this function would print out the current map on the Console
@@ -84,26 +93,44 @@ namespace MyTankClient
                     }
                 }
             }
-
-            foreach(CoinPack item in coinPacks)
+            try
             {
-                if (item.time > 0)
+                foreach (CoinPack item in coinPacks)
                 {
-                    
-                    map[item.y, item.x] = "C";
+                    if (item.time > 0)
+                    {
+
+                        map[item.y, item.x] = "C";
+                    }
+                    else
+                    {
+                        coinPacks.Remove(item);
+                    }
                 }
             }
-
-            foreach (LifePack item in lifePacks)
+            catch (Exception e)
             {
-                if (item.time > 0)
-                {
-                    map[item.y, item.x] = "L";
-                }
+
             }
 
+            try
+            {
+                foreach (LifePack item in lifePacks)
+                {
+                    if (item.time > 0)
+                    {
+                        map[item.y, item.x] = "L";
+                    }
+                    else
+                    {
+                        lifePacks.Remove(item);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
 
-
+            }
         }
 
         //this would update the locations of the tanks
@@ -119,7 +146,7 @@ namespace MyTankClient
         }
 
         //this method would decrement the time of life packs and update them
-        public void updateCoinsAndLifepacks()
+        public static void updateCoinsAndLifepacks()
         {
 
             foreach(CoinPack item in coinPacks )
@@ -255,7 +282,7 @@ namespace MyTankClient
             string[] location = lines[1].Split(delimeters2);
 
             //this would add the newly created life packs to the life packs list
-            lifePacks.Add(new LifePack(Int32.Parse(location[0]), Int32.Parse(location[1]), Int32.Parse(lines[2])/1000)); 
+            lifePacks.Add(new LifePack(Int32.Parse(location[0]), Int32.Parse(location[1]), 1+ (Int32.Parse(lines[2])/1000))); 
             
             //this adds the life packs to the life pack array 
             map[Int32.Parse(location[1]), Int32.Parse(location[0])] = "L";
@@ -408,8 +435,9 @@ namespace MyTankClient
             char[] delimeters2 = {','};
             string[] location = lines[1].Split(delimeters2);
 
-            coinPacks.Add(new CoinPack(Int32.Parse(location[0]), Int32.Parse(location[1]),Int32.Parse(lines[2])/1000, Int32.Parse(lines[3])));
+            coinPacks.Add(new CoinPack(Int32.Parse(location[0]), Int32.Parse(location[1]),1+ (Int32.Parse(lines[2])/1000), Int32.Parse(lines[3])));
             map[Int32.Parse(location[1]), Int32.Parse(location[0])] = "C";
+
             updateMap();
             printMap();
         }
@@ -495,6 +523,7 @@ namespace MyTankClient
                 }
                 
             }
+
             updateMap();
             printMap();
         }
@@ -528,6 +557,7 @@ namespace MyTankClient
             }
             
             Console.WriteLine("Decoding initial player locations");
+            
             updateMap();
             printMap();
 
