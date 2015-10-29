@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,9 +17,18 @@ namespace MyTankClient
     {
         MyClient client;
 
+        // Create a logger for use in this class
+        private static log4net.ILog log = log4net.LogManager.GetLogger(typeof(Form1));
+
         public Form1()
         {
+            //Initiate logging based on XML configuration
+            log4net.Config.XmlConfigurator.Configure();
+
             InitializeComponent();
+            //Call the logger
+            log.Info("Components initialized...");
+
             client = new MyClient();
             Form1.CheckForIllegalCrossThreadCalls = false;
             Thread thread = new Thread(new ThreadStart(updateMap));
@@ -34,28 +44,48 @@ namespace MyTankClient
             
         }
 
-
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
+            //Call the logger
+            log.Info(e.KeyCode.ToString()+" pressed...");
+
             if (e.KeyCode == Keys.Left)
             {
-                client.sendToServer("LEFT#", this);
+                //Unit testing
+                Assert.AreEqual("Left", e.KeyCode.ToString());
+
+                btnLeft.PerformClick();
+                btnLeft.Focus();
             }
             else if (e.KeyCode == Keys.Right)
             {
-                client.sendToServer("RIGHT#", this);
+                //Unit testing
+                Assert.AreEqual("Right", e.KeyCode.ToString());
+
+                btnRight.PerformClick();
+                btnRight.Focus();
             }
             else if (e.KeyCode == Keys.Up)
             {
-                client.sendToServer("UP#", this);
+                //Unit testing
+                Assert.AreEqual("Up", e.KeyCode.ToString());
+
+                btnUp.PerformClick();
+                btnUp.Focus();
             }
             else if (e.KeyCode == Keys.Down)
             {
-                client.sendToServer("DOWN#", this);
+                //Unit testing
+                Assert.AreEqual("Down", e.KeyCode.ToString());
+
+                btnDown.PerformClick();
+                btnDown.Focus();
             }
-            else if (e.KeyCode == Keys.A)
+            else if (e.KeyCode == Keys.Space)
             {
-                client.sendToServer("SHOOT#", this);
+                //Assert.AreEqual("Space", e.KeyCode.ToString());
+                btnShoot.PerformClick();
+                btnShoot.Focus();
             }
         }
 
@@ -64,6 +94,7 @@ namespace MyTankClient
 
         }
 
+        //Button click controls
         private void btnJoin_Click(object sender, EventArgs e)
         {
             client.sendToServer("JOIN#", this);
@@ -96,9 +127,19 @@ namespace MyTankClient
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            foreach (Control control in this.Controls)
+            {
+                control.PreviewKeyDown += new PreviewKeyDownEventHandler(control_PreviewKeyDown);
+            }
         }
 
+        void control_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right || e.KeyCode == Keys.A)
+            {
+                e.IsInputKey = true;
+            }
+        }
 
         
     }
