@@ -70,7 +70,7 @@ namespace MyTankClient
             }
             else if (e.KeyCode == Keys.Down)
             {
-                Assert.AreEqual("Downt", e.KeyCode.ToString());
+                Assert.AreEqual("Down", e.KeyCode.ToString());
                 client.sendToServer("DOWN#", this);
             }
             else if (e.KeyCode == Keys.A)
@@ -114,6 +114,14 @@ namespace MyTankClient
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void LogText_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode.ToString()=="A")
+            {
+                LogText.Text = "";
+            }
         }
 
         /*[TestMethod()]
