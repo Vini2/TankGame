@@ -104,7 +104,6 @@
             this.LogText.Name = "LogText";
             this.LogText.Size = new System.Drawing.Size(407, 330);
             this.LogText.TabIndex = 6;
-            this.LogText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LogText_KeyDown);
             // 
             // Form1
             // 
