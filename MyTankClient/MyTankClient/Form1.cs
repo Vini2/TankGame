@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -33,6 +34,7 @@ namespace MyTankClient
             Form1.CheckForIllegalCrossThreadCalls = false;
             Thread thread = new Thread(new ThreadStart(updateMap));
             thread.Start();
+
         }
 
         protected void updateMap()
@@ -53,22 +55,27 @@ namespace MyTankClient
 
             if (e.KeyCode == Keys.Left)
             {
+                Assert.AreEqual("Left", e.KeyCode.ToString());
                 client.sendToServer("LEFT#", this);
             }
             else if (e.KeyCode == Keys.Right)
             {
+                Assert.AreEqual("Right", e.KeyCode.ToString());
                 client.sendToServer("RIGHT#", this);
             }
             else if (e.KeyCode == Keys.Up)
             {
+                Assert.AreEqual("Up", e.KeyCode.ToString());
                 client.sendToServer("UP#", this);
             }
             else if (e.KeyCode == Keys.Down)
             {
+                Assert.AreEqual("Downt", e.KeyCode.ToString());
                 client.sendToServer("DOWN#", this);
             }
             else if (e.KeyCode == Keys.A)
             {
+                Assert.AreEqual("A", e.KeyCode.ToString());
                 client.sendToServer("SHOOT#", this);
             }
         }
@@ -109,7 +116,14 @@ namespace MyTankClient
 
         }
 
-
+        /*[TestMethod()]
+        public void combineArrayStringWithSpaceTest(String input)
+        {
+            string expected = string.Empty; // TODO: Initialize to an appropriate value
+            string actual = input;
+            Assert.AreEqual(expected, actual);
+            Assert.Inconclusive("Verify the correctness of this test method.");
+        } */ 
         
     }
 }
