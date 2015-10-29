@@ -73,10 +73,6 @@ namespace MyTankClient
             }
         }
 
-        private void Form1_KeyUp(object sender, KeyEventArgs e)
-        {
-
-        }
 
         private void btnJoin_Click(object sender, EventArgs e)
         {
