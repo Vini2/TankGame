@@ -75,8 +75,6 @@ namespace MyTankClient
 
         public void updateMap()
         {
-            //Call the logger
-            log.Info("Update map");
            
             for (int x = 0; x < 10; x++)
             {
@@ -113,8 +111,6 @@ namespace MyTankClient
 
         public void updateCoinsAndLifepacks()
         {
-            //Call the logger
-            log.Info("Update coins and life packs");
 
             foreach(CoinPack item in coinPacks )
             {
@@ -141,14 +137,8 @@ namespace MyTankClient
             stream.Write(msg, 0, msg.Length);
             stream.Close();
             client_1.Close();
-            
-            //Start the game with the command JOIN#
-            if (message.Equals("JOIN#"))
-            {    
+            if (message.Equals("JOIN#"))    //Start the game with the command JOIN#
                 thread.Start();
-                //Call the logger
-                log.Info("Joined to the game");
-            }
         }
 
         //Get messages from server
