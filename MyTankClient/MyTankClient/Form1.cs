@@ -12,13 +12,23 @@ using System.Windows.Forms;
 
 namespace MyTankClient
 {
+
     public partial class Form1 : Form
     {
         MyClient client;
 
+        // Create a logger for use in this class
+        private static log4net.ILog log = log4net.LogManager.GetLogger(typeof(Form1));
+
         public Form1()
         {
+            //Initiate logging based on XML configuration
+            log4net.Config.XmlConfigurator.Configure();
+
             InitializeComponent();
+            //Call the logger
+            log.Info("Components initialized");
+
             client = new MyClient();
             Form1.CheckForIllegalCrossThreadCalls = false;
             Thread thread = new Thread(new ThreadStart(updateMap));
@@ -37,6 +47,10 @@ namespace MyTankClient
         
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
+
+            //Call the logger
+            log.Info(e.KeyCode+" pressed");
+
             if (e.KeyCode == Keys.Left)
             {
                 client.sendToServer("LEFT#", this);
