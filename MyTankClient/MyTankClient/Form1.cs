@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -44,6 +45,7 @@ namespace MyTankClient
         }
 
         
+        //Key press controls
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             //Call the logger
@@ -51,26 +53,39 @@ namespace MyTankClient
 
             if (e.KeyCode == Keys.Left)
             {
+                //Unit testing
+                Assert.AreEqual("Left", e.KeyCode.ToString());
+
                 btnLeft.PerformClick();
                 btnLeft.Focus();
             }
             else if (e.KeyCode == Keys.Right)
             {
+                //Unit testing
+                Assert.AreEqual("Right", e.KeyCode.ToString());
+
                 btnRight.PerformClick();
                 btnRight.Focus();
             }
             else if (e.KeyCode == Keys.Up)
             {
+                //Unit testing
+                Assert.AreEqual("Up", e.KeyCode.ToString());
+
                 btnUp.PerformClick();
                 btnUp.Focus();
             }
             else if (e.KeyCode == Keys.Down)
             {
+                //Unit testing
+                Assert.AreEqual("Down", e.KeyCode.ToString());
+
                 btnDown.PerformClick();
                 btnDown.Focus();
             }
-            else if (e.KeyCode == Keys.A)
+            else if (e.KeyCode == Keys.Space)
             {
+                //Assert.AreEqual("Space", e.KeyCode.ToString());
                 btnShoot.PerformClick();
                 btnShoot.Focus();
             }
@@ -81,6 +96,7 @@ namespace MyTankClient
 
         }
 
+        //Button click controls
         private void btnJoin_Click(object sender, EventArgs e)
         {
             client.sendToServer("JOIN#", this);
