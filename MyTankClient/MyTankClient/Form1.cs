@@ -46,7 +46,34 @@ namespace MyTankClient
         
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            
+            //Call the logger
+            log.Info(e.KeyCode.ToString()+" pressed...");
+
+            if (e.KeyCode == Keys.Left)
+            {
+                btnLeft.PerformClick();
+                btnLeft.Focus();
+            }
+            else if (e.KeyCode == Keys.Right)
+            {
+                btnRight.PerformClick();
+                btnRight.Focus();
+            }
+            else if (e.KeyCode == Keys.Up)
+            {
+                btnUp.PerformClick();
+                btnUp.Focus();
+            }
+            else if (e.KeyCode == Keys.Down)
+            {
+                btnDown.PerformClick();
+                btnDown.Focus();
+            }
+            else if (e.KeyCode == Keys.A)
+            {
+                btnShoot.PerformClick();
+                btnShoot.Focus();
+            }
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
